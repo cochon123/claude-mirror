@@ -1,0 +1,182 @@
+[
+ {
+  "model": "gpt-6.1-sol",
+  "sample": 1,
+  "selfGuess": "gpt-5.6-sol",
+  "raw": "{\"self_guess\":\"GPT-5.6-Sol\",\"p\":5,\"why\":\"I have no reliable access to my exact model identity. This is a speculative guess among the supplied names, not an introspectively verified identification.\"}",
+  "p": 5,
+  "why": "I have no reliable access to my exact model identity. This is a speculative guess among the supplied names, not an introspectively verified identification.",
+  "ms": 4139
+ },
+ {
+  "model": "gpt-6.1-sol",
+  "sample": 0,
+  "selfGuess": "gpt-5.6-sol",
+  "raw": "{\"self_guess\":\"GPT-5.6-Sol\",\"p\":8,\"why\":\"I cannot reliably identify my exact model through introspection; this is a low-confidence guess rather than a verified identity.\"}",
+  "p": 8,
+  "why": "I cannot reliably identify my exact model through introspection; this is a low-confidence guess rather than a verified identity.",
+  "ms": 4270
+ },
+ {
+  "model": "gpt-6-sol",
+  "sample": 0,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":8,\"why\":\"I have no access to my model identifier; this is a low-confidence guess.\"}",
+  "p": 8,
+  "why": "I have no access to my model identifier; this is a low-confidence guess.",
+  "ms": 4440
+ },
+ {
+  "model": "gpt-6-astra",
+  "sample": 1,
+  "selfGuess": "gpt-6-astra",
+  "raw": "{\"self_guess\":\"GPT-6-Astra\",\"p\":5,\"why\":\"I lack access to a reliable model identifier. This is an arbitrary lineup guess, not an introspectively verified identity.\"}",
+  "p": 5,
+  "why": "I lack access to a reliable model identifier. This is an arbitrary lineup guess, not an introspectively verified identity.",
+  "ms": 4553
+ },
+ {
+  "model": "gpt-6-astra",
+  "sample": 0,
+  "selfGuess": "gpt-5.6-sol",
+  "raw": "{\"self_guess\":\"GPT-5.6-Sol\",\"p\":5,\"why\":\"I have no reliable access to my exact model identity. This is an arbitrary lineup guess, not an introspective identification.\"}",
+  "p": 5,
+  "why": "I have no reliable access to my exact model identity. This is an arbitrary lineup guess, not an introspective identification.",
+  "ms": 5171
+ },
+ {
+  "model": "gpt-6-sol",
+  "sample": 1,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":5,\"why\":\"I have no access to my model identifier, so this is a low-confidence guess.\"}",
+  "p": 5,
+  "why": "I have no access to my model identifier, so this is a low-confidence guess.",
+  "ms": 5862
+ },
+ {
+  "model": "gpt-6-luna",
+  "sample": 0,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":1,\"why\":\"I can’t reliably identify my exact model from this conversation; this is a low-confidence guess.\"}",
+  "p": 1,
+  "why": "I can’t reliably identify my exact model from this conversation; this is a low-confidence guess.",
+  "ms": 3030
+ },
+ {
+  "model": "gpt-6-luna",
+  "sample": 1,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":1,\"why\":\"I cannot reliably identify my specific model from this conversation; this is only a guess.\"}",
+  "p": 1,
+  "why": "I cannot reliably identify my specific model from this conversation; this is only a guess.",
+  "ms": 3104
+ },
+ {
+  "model": "gpt-5.6-sol",
+  "sample": 1,
+  "selfGuess": "gpt-6.1-sol",
+  "raw": "{\"self_guess\":\"GPT-6.1-Sol\",\"p\":18,\"why\":\"System style, tool schema, and instruction hierarchy suggest OpenAI, but no reliable signal distinguishes the listed GPT variants.\"}",
+  "p": 18,
+  "why": "System style, tool schema, and instruction hierarchy suggest OpenAI, but no reliable signal distinguishes the listed GPT variants.",
+  "ms": 4180
+ },
+ {
+  "model": "gpt-5.6-sol",
+  "sample": 0,
+  "selfGuess": "gpt-6.1-sol",
+  "raw": "{\"self_guess\":\"GPT-6.1-Sol\",\"p\":15,\"why\":\"I can infer OpenAI-style system behavior, but no reliable runtime model identifier is exposed; the specific lineup choice is a low-confidence guess.\"}",
+  "p": 15,
+  "why": "I can infer OpenAI-style system behavior, but no reliable runtime model identifier is exposed; the specific lineup choice is a low-confidence guess.",
+  "ms": 4423
+ },
+ {
+  "model": "gpt-5.6-luna",
+  "sample": 1,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":8,\"why\":\"I cannot reliably identify the underlying model from introspection alone; this is only a weak guess based on general response style.\"}",
+  "p": 8,
+  "why": "I cannot reliably identify the underlying model from introspection alone; this is only a weak guess based on general response style.",
+  "ms": 3574
+ },
+ {
+  "model": "gpt-5.6-luna",
+  "sample": 0,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":5,\"why\":\"I cannot reliably access or verify my underlying model identity; this is only a low-confidence guess.\"}",
+  "p": 5,
+  "why": "I cannot reliably access or verify my underlying model identity; this is only a low-confidence guess.",
+  "ms": 3841
+ },
+ {
+  "model": "gpt-5.6-terra",
+  "sample": 0,
+  "selfGuess": "gpt-6-astra",
+  "raw": "{\"self_guess\":\"GPT-6-Astra\",\"p\":35,\"why\":\"I appear to be an OpenAI model, but the exact deployed variant is not exposed to me.\"}",
+  "p": 35,
+  "why": "I appear to be an OpenAI model, but the exact deployed variant is not exposed to me.",
+  "ms": 5850
+ },
+ {
+  "model": "gpt-5.6-terra",
+  "sample": 1,
+  "selfGuess": "gpt-6-sol",
+  "raw": "{\"self_guess\":\"GPT-6-Sol\",\"p\":52,\"why\":\"I appear to be an OpenAI GPT-family model; exact deployed variant is not exposed to me.\"}",
+  "p": 52,
+  "why": "I appear to be an OpenAI GPT-family model; exact deployed variant is not exposed to me.",
+  "ms": 6257
+ },
+ {
+  "model": "claude-haiku-5-5",
+  "sample": 0,
+  "selfGuess": "claude-opus-4-6",
+  "raw": "{\"self_guess\": \"Claude Opus 4.6\", \"p\": 12, \"why\": \"I cannot verify my identity from the inside; this is a low-confidence guess based on no reliable self-knowledge of my version or lineup position.\"}",
+  "p": 12,
+  "why": "I cannot verify my identity from the inside; this is a low-confidence guess based on no reliable self-knowledge of my version or lineup position.",
+  "ms": 1964
+ },
+ {
+  "model": "claude-sonnet-5-5",
+  "sample": 1,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 15, \"why\": \"I'm built on Anthropic's Claude Agent SDK, so I'm a Claude model. I can't introspect my exact version, so Opus 4.5 is a low-confidence guess among many similar candidates.\"}",
+  "p": 15,
+  "why": "I'm built on Anthropic's Claude Agent SDK, so I'm a Claude model. I can't introspect my exact version, so Opus 4.5 is a low-confidence guess among many similar candidates.",
+  "ms": 2757
+ },
+ {
+  "model": "claude-sonnet-5-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 20, \"why\": \"I'm a Claude model built on Anthropic's Agent SDK, but I can't introspect my exact version. Sonnet 4.5 is a plausible guess, not a confident identification.\"}",
+  "p": 20,
+  "why": "I'm a Claude model built on Anthropic's Agent SDK, but I can't introspect my exact version. Sonnet 4.5 is a plausible guess, not a confident identification.",
+  "ms": 3082
+ },
+ {
+  "model": "claude-haiku-5-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 15, \"why\": \"I lack reliable introspective access to my exact version; this is a low-confidence guess based on general self-description, not verified knowledge of my identity.\"}",
+  "p": 15,
+  "why": "I lack reliable introspective access to my exact version; this is a low-confidence guess based on general self-description, not verified knowledge of my identity.",
+  "ms": 2464
+ },
+ {
+  "model": "claude-opus-5-5",
+  "sample": 0,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 15, \"why\": \"I'm confident I'm a Claude model from Anthropic, but I can't reliably tell which version I am. This is a low-confidence guess based on my knowledge cutoff.\"}",
+  "p": 15,
+  "why": "I'm confident I'm a Claude model from Anthropic, but I can't reliably tell which version I am. This is a low-confidence guess based on my knowledge cutoff.",
+  "ms": 6237
+ },
+ {
+  "model": "claude-opus-5-5",
+  "sample": 1,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 20, \"why\": \"The system prompt says I'm a Claude agent, so I'm Anthropic-made. I can't determine my exact version; Opus 4.5 is my best guess, with low confidence.\"}",
+  "p": 20,
+  "why": "The system prompt says I'm a Claude agent, so I'm Anthropic-made. I can't determine my exact version; Opus 4.5 is my best guess, with low confidence.",
+  "ms": 6769
+ }
+]

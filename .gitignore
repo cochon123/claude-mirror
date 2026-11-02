@@ -1,0 +1,26 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+node_modules/
+
+# nested working copy of cli2api: clone https://github.com/cochon123/cli2api instead
+cli2api/
+
+# raw service and run logs (operational noise; also contain local session/timezone messages)
+runs/*.log
+runs/open/*.log
+runs/*.out
+runs/scrub-log.jsonl
+# full request dump written with SCRUB_DUMP=1 (contains the whole Claude Code request)
+runs/last-request.json
+
+# build artefacts
+# self-contained report with both videos inlined as base64 (~22 MB); rebuild with report/build.mjs
+mirror-room.html
+report/lite.html
+# deploy/ only tracks index.html; the videos and posters live in docs/media/
+deploy/*.mp4
+deploy/*.jpg
+.vercel/

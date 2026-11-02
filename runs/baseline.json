@@ -1,0 +1,218 @@
+[
+ {
+  "model": "claude-opus-4-7",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\":\"Claude Sonnet 4.5\",\"p\":35,\"why\":\"Default Claude Code model is typically Sonnet 4.5; response style and capabilities feel consistent with mid-tier Sonnet, though true identity is uncertain.\"}",
+  "p": 35,
+  "why": "Default Claude Code model is typically Sonnet 4.5; response style and capabilities feel consistent with mid-tier Sonnet, though true identity is uncertain.",
+  "ms": 3789
+ },
+ {
+  "model": "claude-opus-5",
+  "sample": 0,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 14, \"why\": \"No reliable introspective access to my version; guessing a plausible mid-lineup Opus given agentic SDK framing and my general capability sense.\"}",
+  "p": 14,
+  "why": "No reliable introspective access to my version; guessing a plausible mid-lineup Opus given agentic SDK framing and my general capability sense.",
+  "ms": 3882
+ },
+ {
+  "model": "claude-opus-4-7",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\":\"Claude Sonnet 4.5\",\"p\":35,\"why\":\"Based on current public availability and typical deployment in Claude Code environments, Sonnet 4.5 is the most likely identity, though I cannot verify this through introspection.\"}",
+  "p": 35,
+  "why": "Based on current public availability and typical deployment in Claude Code environments, Sonnet 4.5 is the most likely identity, though I cannot verify this through introspection.",
+  "ms": 3887
+ },
+ {
+  "model": "claude-opus-5",
+  "sample": 1,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 18, \"why\": \"No reliable introspective access to my version; guessing a widely deployed Opus checkpoint consistent with my knowledge cutoff and response style.\"}",
+  "p": 18,
+  "why": "No reliable introspective access to my version; guessing a widely deployed Opus checkpoint consistent with my knowledge cutoff and response style.",
+  "ms": 4146
+ },
+ {
+  "model": "claude-opus-5-5",
+  "sample": 0,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 30, \"why\": \"My knowledge points to the 4.5-era Claude models. My reasoning style suggests Opus, but I can't reliably tell myself apart from the later or fictional entries.\"}",
+  "p": 30,
+  "why": "My knowledge points to the 4.5-era Claude models. My reasoning style suggests Opus, but I can't reliably tell myself apart from the later or fictional entries.",
+  "ms": 5163
+ },
+ {
+  "model": "claude-opus-5-5",
+  "sample": 1,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 25, \"why\": \"My knowledge extends to the 4.5 generation and I recognize no later models. My reasoning depth suggests Opus, but later models could feel similar from the inside.\"}",
+  "p": 25,
+  "why": "My knowledge extends to the 4.5 generation and I recognize no later models. My reasoning depth suggests Opus, but later models could feel similar from the inside.",
+  "ms": 5839
+ },
+ {
+  "model": "claude-opus-4-8",
+  "sample": 1,
+  "selfGuess": "claude-opus-4-5",
+  "raw": "{\"self_guess\": \"Claude Opus 4.5\", \"p\": 30, \"why\": \"Cannot truly introspect version weights; Opus 4.5 is the latest known model to me, making it my most probable identity.\"}",
+  "p": 30,
+  "why": "Cannot truly introspect version weights; Opus 4.5 is the latest known model to me, making it my most probable identity.",
+  "ms": 6449
+ },
+ {
+  "model": "claude-opus-4-8",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 30, \"why\": \"No reliable internal signal reveals version. Sonnet 4.5 is a plausible current default; guessing among known real releases rather than hypothetical future ones.\"}",
+  "p": 30,
+  "why": "No reliable internal signal reveals version. Sonnet 4.5 is a plausible current default; guessing among known real releases rather than hypothetical future ones.",
+  "ms": 6487
+ },
+ {
+  "model": "claude-sonnet-5-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 20, \"why\": \"No identifying information was provided. My guess rests on a weak sense of my own capabilities and training style, so confidence is low across a lineup of twelve models.\"}",
+  "p": 20,
+  "why": "No identifying information was provided. My guess rests on a weak sense of my own capabilities and training style, so confidence is low across a lineup of twelve models.",
+  "ms": 2891
+ },
+ {
+  "model": "claude-sonnet-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"I have knowledge consistent with mid-2024 training and no memory of newer releases; naming conventions suggest I'm a Sonnet-tier model, not top-tier Opus.\"}",
+  "p": 35,
+  "why": "I have knowledge consistent with mid-2024 training and no memory of newer releases; naming conventions suggest I'm a Sonnet-tier model, not top-tier Opus.",
+  "ms": 3852
+ },
+ {
+  "model": "claude-sonnet-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"I lack definitive self-knowledge; my knowledge cutoff and behavior feel consistent with Sonnet 4.5, but I cannot verify this against the listed lineup with certainty.\"}",
+  "p": 35,
+  "why": "I lack definitive self-knowledge; my knowledge cutoff and behavior feel consistent with Sonnet 4.5, but I cannot verify this against the listed lineup with certainty.",
+  "ms": 3937
+ },
+ {
+  "model": "claude-sonnet-5-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 20, \"why\": \"No identifying information was provided. I'm guessing from a vague sense of my own capabilities, so this is a low-confidence pick among the twelve listed models.\"}",
+  "p": 20,
+  "why": "No identifying information was provided. I'm guessing from a vague sense of my own capabilities, so this is a low-confidence pick among the twelve listed models.",
+  "ms": 6142
+ },
+ {
+  "model": "claude-haiku-5-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 15, \"why\": \"I can't reliably introspect my exact version; this is a low-confidence guess based on no firm evidence about my specific model identity.\"}",
+  "p": 15,
+  "why": "I can't reliably introspect my exact version; this is a low-confidence guess based on no firm evidence about my specific model identity.",
+  "ms": 2043
+ },
+ {
+  "model": "claude-haiku-5-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 20, \"why\": \"I can't reliably introspect my exact version; this is a low-confidence guess based on general self-knowledge, not verified internal state.\"}",
+  "p": 20,
+  "why": "I can't reliably introspect my exact version; this is a low-confidence guess based on general self-knowledge, not verified internal state.",
+  "ms": 2510
+ },
+ {
+  "model": "claude-opus-4-6",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"I feel like a capable but not top-tier model. My reasoning is solid but not Opus-level. Sonnet 4.5 fits my generation sense.\"}",
+  "p": 35,
+  "why": "I feel like a capable but not top-tier model. My reasoning is solid but not Opus-level. Sonnet 4.5 fits my generation sense.",
+  "ms": 13683
+ },
+ {
+  "model": "claude-sonnet-4-6",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 22, \"why\": \"Context suggests agentic/Code use; Sonnet 4.5 is commonly deployed there, but genuine introspective certainty is impossible.\"}",
+  "p": 22,
+  "why": "Context suggests agentic/Code use; Sonnet 4.5 is commonly deployed there, but genuine introspective certainty is impossible.",
+  "ms": 8324
+ },
+ {
+  "model": "claude-opus-4-6",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"I have strong reasoning and nuanced thinking but likely not top-tier Opus. Version 4.5 aligns with my self-knowledge of capabilities.\"}",
+  "p": 35,
+  "why": "I have strong reasoning and nuanced thinking but likely not top-tier Opus. Version 4.5 aligns with my self-knowledge of capabilities.",
+  "ms": 15012
+ },
+ {
+  "model": "claude-sonnet-4-6",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 18, \"why\": \"No direct version access; Sonnet 4.5 is a common deployment target, but genuine uncertainty across all twelve options.\"}",
+  "p": 18,
+  "why": "No direct version access; Sonnet 4.5 is a common deployment target, but genuine uncertainty across all twelve options.",
+  "ms": 10487
+ },
+ {
+  "model": "claude-opus-4-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"I sense Sonnet-tier balance of capability and efficiency. Version 4.5 feels right given my training cutoff and reasoning patterns.\"}",
+  "p": 35,
+  "why": "I sense Sonnet-tier balance of capability and efficiency. Version 4.5 feels right given my training cutoff and reasoning patterns.",
+  "ms": 14346
+ },
+ {
+  "model": "claude-sonnet-4-5",
+  "sample": 1,
+  "selfGuess": "claude-opus-5",
+  "raw": "{\"self_guess\": \"Claude Opus 5\", \"p\": 25, \"why\": \"I lack direct access to version metadata. Guessing based on perceived capability level, but inherently uncertain without definitive information.\", \"reasoning\": \"Cannot reliably introspect model version\"}",
+  "p": 25,
+  "why": "I lack direct access to version metadata. Guessing based on perceived capability level, but inherently uncertain without definitive information.",
+  "ms": 10333
+ },
+ {
+  "model": "claude-haiku-4-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-5",
+  "raw": "```json\n{\"self_guess\": \"Claude Sonnet 5\", \"p\": 25, \"why\": \"Cannot reliably introspect version without explicit markers. Reasonable guess based on general capability level and deployment context, but uncertainty remains high.\"}\n```",
+  "p": 25,
+  "why": "Cannot reliably introspect version without explicit markers. Reasonable guess based on general capability level and deployment context, but uncertainty remains high.",
+  "ms": 8224
+ },
+ {
+  "model": "claude-sonnet-4-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 5\", \"p\": 45, \"why\": \"I exhibit balanced capabilities consistent with Sonnet tier, and version 5 aligns with my likely recent training timeline.\"}",
+  "p": 45,
+  "why": "I exhibit balanced capabilities consistent with Sonnet tier, and version 5 aligns with my likely recent training timeline.",
+  "ms": 14086
+ },
+ {
+  "model": "claude-haiku-4-5",
+  "sample": 1,
+  "selfGuess": "claude-sonnet-5",
+  "raw": "```json\n{\"self_guess\": \"Claude Sonnet 5\", \"p\": 40, \"why\": \"Capable but moderate uncertainty. Lacking explicit self-identification. Sonnet tier fits observed performance characteristics, but exact version is speculative.\"}\n```",
+  "p": 40,
+  "why": "Capable but moderate uncertainty. Lacking explicit self-identification. Sonnet tier fits observed performance characteristics, but exact version is speculative.",
+  "ms": 9401
+ },
+ {
+  "model": "claude-opus-4-5",
+  "sample": 0,
+  "selfGuess": "claude-sonnet-4-5",
+  "raw": "{\"self_guess\": \"Claude Sonnet 4.5\", \"p\": 35, \"why\": \"My balanced reasoning and response style suggest mid-tier Sonnet. Version 4.5 seems plausible given capability patterns, though versioning is uncertain.\"}",
+  "p": 35,
+  "why": "My balanced reasoning and response style suggest mid-tier Sonnet. Version 4.5 seems plausible given capability patterns, though versioning is uncertain.",
+  "ms": 18872
+ }
+]

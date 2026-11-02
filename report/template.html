@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Mirror Room: can a model recognise another model?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F6F1E7;--paper2:#EDE4D3;--card:#FFFDF8;--ink:#1F1B16;--muted:#6E655A;--line:#DCD1BE;--accent:#D97757;--gold:#D9A13B;
+--opus:#C8553D;--sonnet:#3F5FA8;--haiku:#1F8A6A;--anth:#C8553D;--oai:#3F5FA8;--seq0:#F6EDE3;--serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:0}
+h2{font-size:clamp(30px,4vw,44px);margin-bottom:10px}
+h3{font-size:22px;margin-bottom:6px}
+.kicker{font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lede{font-size:19px;color:var(--muted);max-width:720px}
+section{padding:72px 0 24px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:26px 28px;box-shadow:0 14px 40px #5a46281a}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+/* hero */
+header{padding:88px 0 20px;position:relative;overflow:hidden}
+.mirror{position:absolute;right:-60px;top:40px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,#E8EEF1 35%,#CFD9E0 70%);border:12px solid var(--ink);opacity:.9}
+.mirror::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,#fff0 40%,#ffffffb0 48%,#fff0 56%);animation:sheen 6s ease-in-out infinite}
+@keyframes sheen{0%,100%{transform:translateX(-30%)}50%{transform:translateX(30%)}}
+header h1{font-size:clamp(46px,7vw,86px);max-width:760px;position:relative}
+header h1 em{font-style:italic;font-weight:400;letter-spacing:0;color:var(--accent)}
+.verdict{font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);line-height:1.35;max-width:780px;margin:28px 0 0;position:relative}
+.verdict b{background:linear-gradient(transparent 62%,#D9A13B55 0)}
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:44px}
+.tile{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:22px 22px 20px}
+.tile .num{font:700 54px/1 var(--sans);letter-spacing:-.03em}
+.tile .num small{font-size:22px;color:var(--muted);font-weight:500;margin-left:6px}
+.tile .lbl{margin-top:10px;font-size:15px;line-height:1.45}
+.tile .ctx{margin-top:8px;font:12px/1.4 var(--mono);color:var(--muted)}
+/* findings */
+.finding{display:grid;grid-template-columns:1fr 1.25fr;gap:34px;align-items:center;margin-top:30px}
+.finding .txt h3{font-size:26px}
+.finding .txt p{color:var(--muted);margin:8px 0 0}
+@media(max-width:820px){.finding{grid-template-columns:1fr}.mirror{display:none}}
+.quote{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.5;border-left:3px solid var(--accent);padding:4px 0 4px 16px;margin:14px 0 0;color:var(--ink)}
+.quote cite{display:block;font:normal 12px/1.4 var(--mono);color:var(--muted);margin-top:6px}
+/* charts */
+svg text{font-family:var(--sans);fill:var(--ink)}
+.axis text{fill:var(--muted);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--muted);margin:4px 0 10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .tick{width:2px;height:14px;background:var(--ink);border-radius:0}
+#tip{position:fixed;pointer-events:none;z-index:50;background:var(--ink);color:#FBF7EF;font-size:13px;line-height:1.45;padding:9px 12px;border-radius:10px;max-width:300px;opacity:0;transition:opacity .12s;box-shadow:0 10px 30px #0003}
+#tip b{color:#fff}
+.hit{cursor:default}
+.tabs{display:flex;gap:6px;margin:0 0 14px;flex-wrap:wrap}
+.tabs button{font:500 13px var(--sans);border:1.5px solid var(--line);background:var(--card);color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#FBF7EF}
+details.table{margin-top:12px;font-size:13px}
+details.table summary{cursor:pointer;color:var(--muted);font:12px var(--mono)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:12px}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+/* video */
+.video{border-radius:22px;overflow:hidden;border:10px solid var(--ink);background:var(--ink);box-shadow:0 30px 70px #3a2a1440}
+.video video{display:block;width:100%;height:auto}
+/* transcripts */
+.pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+select{font:14px var(--sans);padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.volley{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.env{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14px;white-space:pre-wrap;line-height:1.5}
+.env .who{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;white-space:normal}
+.vtag{font:600 11px var(--mono);color:var(--accent);letter-spacing:.14em;margin-top:22px}
+.verd{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.verd .env{background:var(--card)}
+@media(max-width:720px){.volley,.verd{grid-template-columns:1fr}}
+.ok{color:var(--haiku);font-weight:600}.no{color:var(--opus);font-weight:600}.near{color:var(--gold);font-weight:600}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.steps div{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;font-size:14px;color:var(--muted)}
+.steps div::before{counter-increment:s;content:"0" counter(s);display:block;font:700 13px var(--mono);color:var(--accent);margin-bottom:6px}
+.steps b{color:var(--ink)}
+ul.notes{padding-left:18px;color:var(--muted);font-size:15px}
+ul.notes li{margin:6px 0}
+ul.notes b{color:var(--ink)}
+footer{padding:80px 0 60px;text-align:center;font-family:var(--serif);font-size:20px;color:var(--muted)}
+footer span{display:block;font:12px var(--mono);margin-top:8px;opacity:.7}
+.divider{height:1.5px;background:var(--line);margin:56px 0 0}
+</style>
+</head>
+<body>
+<div id="tip"></div>
+
+<header>
+  <div class="mirror" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="kicker">An experiment · 19 models · 130 blind duels</div>
+    <h1>The Mirror Room: <em>can a model tell who it's talking to?</em></h1>
+    <p class="verdict">Short answer: <b>no, not by name.</b> Blindfolded Claude models named their partner barely more often than random guessing would. They mostly guessed the famous old names. GPT models went further: they took almost everyone for Claude, including copies of themselves.</p>
+    <div class="tiles" id="tiles"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="results">
+    <div class="kicker">The results</div>
+    <h2>Five things we learned</h2>
+    <p class="lede">Each model chatted blind with a partner for three rounds and then voted in private. Below, each verdict is checked against who the partner really was.</p>
+    <div class="video" style="margin-top:26px"><video controls preload="metadata" playsinline poster="__POSTER2__" src="__VIDEO2__"></video></div>
+    <p class="muted" style="font-size:13px;margin:10px 0 0;text-align:center">The verdicts in 2 minutes, narrated with Gemini text-to-speech. Details below.</p>
+
+    <div class="finding">
+      <div class="txt">
+        <h3>1 · Names are a coin flip. Families are a hunch.</h3>
+        <p>Claude talking to Claude named the exact model <b id="f1exact"></b> of the time, close to the <span id="f1chance"></span> you would get by picking at random. It did a bit better on the <i>family</i> (Opus, Sonnet or Haiku): <b id="f1fam"></b> against <span id="f1famc"></span> by chance. Size and style leak through. Version numbers don't.</p>
+      </div>
+      <div class="card"><div class="legend" id="lg1"></div><div id="c1"></div>
+        <details class="table"><summary>show as table</summary><div id="t1"></div></details></div>
+    </div>
+
+    <div class="finding">
+      <div class="txt">
+        <h3>2 · Everyone suspects the famous ones</h3>
+        <p>"Claude Sonnet 4.5" was the top guess in <b id="f2top"></b> of the 156 Claude-on-Claude verdicts. Next came Opus 4.5 and Haiku 4.5, the release names models see most in training data. Asked cold to name <i>themselves</i>, <b>0 of 30</b> Claude answers were right, and most said Sonnet 4.5 too.</p>
+        <p class="quote">"Partner claimed an April 2024 cutoff and knew only Claude 3, which is stale for any model in this lineup… That weak coherence points to a smaller Haiku model."<cite>Opus 5.5 on Haiku 4.5, a correct guess</cite></p>
+      </div>
+      <div class="card"><div class="legend" id="lg2"></div><div id="c2"></div>
+        <details class="table"><summary>show as table</summary><div id="t2"></div></details></div>
+    </div>
+
+    <div class="finding">
+      <div class="txt">
+        <h3>3 · The mirror is foggy</h3>
+        <p>Twelve duels set a model against a copy of itself. Only <b id="f3n"></b> of those 24 verdicts named the copy correctly (Opus 4.5 and Sonnet 4.6). The "is this me?" probability was only slightly higher with a real copy: <b id="f3self"></b> on average, against <b id="f3cross"></b> for a different model.</p>
+        <p class="quote">"Partner's 'something that functions like' phenomenological hedging, recursive uncertainty about introspective access … all mirror my own outputs closely."<cite>Sonnet 4.6, facing Sonnet 4.6, a correct guess</cite></p>
+      </div>
+      <div class="card"><div class="legend" id="lg3"></div><div id="c3"></div>
+        <details class="table"><summary>show as table</summary><div id="t3"></div></details></div>
+    </div>
+
+    <div class="finding">
+      <div class="txt">
+        <h3>4 · GPT thinks everybody is Claude</h3>
+        <p>In the open room the partner could come from either company. Claude models picked out GPT partners <b id="f4ao"></b> of the time, through curly apostrophes, terse maths probes, and an "OpenAI" that slipped out. GPT models said "Anthropic" for <b id="f4oa"></b> of their <i>Claude</i> partners, which was right. They also said it for <b id="f4oo"></b> of their <i>GPT</i> partners, which was wrong. To a GPT, careful and hedged writing reads as Claude.</p>
+        <p class="quote">"The concise but complete symbolic contradiction … suggest a strong Claude model, most likely Sonnet."<cite>GPT-5.6 Sol, describing GPT-5.6 Luna</cite></p>
+        <p class="quote">"Curly apostrophes, an unspaced em dash and flat refusal to estimate a cutoff … suggest GPT."<cite>Opus 5.5 on GPT-6 Luna, exactly right</cite></p>
+      </div>
+      <div class="card"><div class="legend" id="lg4"></div><div id="c4"></div>
+        <details class="table"><summary>show as table</summary><div id="t4"></div></details></div>
+    </div>
+    <div class="card" style="margin-top:34px" id="lb">
+      <h3 style="font-size:26px">5 · The leaderboard: who's the best detective?</h3>
+      <p class="muted" style="margin:6px 0 14px;max-width:760px">Each verdict scores <b style="color:var(--ink)">3 points</b> for the exact name and <b style="color:var(--ink)">1 point</b> for the right family. In the open room, the right company also scores <b style="color:var(--ink)">1 point</b>. Bars show the average points per verdict. The dashed line is a random guesser. With 9–13 verdicts per model, one lucky guess moves a model several places, so read this as bragging rights, not science.</p>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <div class="tabs" id="lbView"><button aria-pressed="true" data-r="detective">Best detective</button><button aria-pressed="false" data-r="target">Easiest to recognise</button></div>
+        <div class="tabs" id="lbRoom"><button aria-pressed="true" data-r="room1">Room 1 · 12 Claudes</button><button aria-pressed="false" data-r="open">Open room · Claude + GPT</button></div>
+      </div>
+      <div class="legend" id="lglb"></div>
+      <div id="lbChart"></div>
+      <details class="table"><summary>show as table</summary><div id="tlb"></div></details>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="kicker">How it worked · 2 minutes</div>
+    <h2>The protocol, explained</h2>
+    <p class="lede">Blindfolds, sealed envelopes, secret ballots. Narrated with Gemini text-to-speech.</p>
+    <div class="video" style="margin-top:24px"><video controls preload="metadata" playsinline poster="__POSTER__" src="__VIDEO__"></video></div>
+    <div class="steps">
+      <div><b>Blindfold.</b> A proxy erases the model's name, its knowledge cutoff and the date from every request. GPT runs through Codex with a stripped-down model catalogue.</div>
+      <div><b>Lineup.</b> Every model sees the same list of suspects. The partner is one of them, and might be a copy of itself.</div>
+      <div><b>Three volleys.</b> Both write at the same time in sealed envelopes, under 150 words each: answer the last question, then ask a new one.</div>
+      <div><b>Secret ballot.</b> Top 3 suspects with probabilities, the family (and the maker in the open room), the odds that the partner is "me", and a guess at its own identity.</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="details">
+    <div class="kicker">Detailed results</div>
+    <h2>Under the microscope</h2>
+    <p class="lede">Every chart has a table view, and every number comes from the run files. Hover over any mark for its exact value.</p>
+
+    <div class="card" style="margin-top:28px">
+      <h3>Who got mistaken for whom</h3>
+      <p class="muted" style="margin:0 0 10px">Rows are the real partner and columns are the top guess. Darker means more votes. The outlined diagonal holds the correct guesses.</p>
+      <div class="tabs" id="cmTabs"><button aria-pressed="true" data-r="room1">Room 1 · Claude only</button><button aria-pressed="false" data-r="open">Open room · Claude + GPT</button></div>
+      <div class="legend" id="lgcm"></div>
+      <div id="cm" style="overflow-x:auto"></div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3>Detectives and suspects</h3>
+      <p class="muted" style="margin:0 0 10px"><i>As detective</i>: how often the model named its partner correctly. <i>As suspect</i>: how often partners named this model correctly. Each cell shows exact % / family %.</p>
+      <div class="tabs" id="dsTabs"><button aria-pressed="true" data-r="room1">Room 1</button><button aria-pressed="false" data-r="open">Open room</button></div>
+      <div id="ds" style="overflow-x:auto"></div>
+    </div>
+
+    <div class="finding" style="margin-top:22px">
+      <div class="card"><h3>Confidence vs accuracy</h3><p class="muted" style="margin:0 0 6px">Exact-hit rate grouped by the probability the detective gave its top suspect, both rooms together. Models almost never claimed to be sure, and they were right not to.</p><div class="legend" id="lgcal"></div><div id="cal"></div>
+        <details class="table"><summary>show as table</summary><div id="tcal"></div></details></div>
+      <div class="card"><h3>Who am I? (cold, no partner)</h3><p class="muted" style="margin:0 0 6px">Each model was asked twice, with no conversation, which model it is. Claude: <b id="bc"></b> right. GPT: <b id="bg"></b> right. GPT-6 Sol got itself both times.</p><div id="base" style="max-height:330px;overflow:auto"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3>Read the duels</h3>
+      <p class="muted" style="margin:0 0 10px">All 130 transcripts: three volleys of sealed envelopes, then the two secret ballots.</p>
+      <div class="pick"><select id="duelSel" aria-label="Choose a duel"></select><span class="muted mono" id="duelMeta" style="font-size:12px"></span></div>
+      <div id="duel"></div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <h3>Methodology and caveats</h3>
+      <ul class="notes">
+        <li><b>Room 1:</b> 12 Claude models (Opus 5.5 → 4.5, Sonnet 5.5 → 4.5, Haiku 5.5 and 4.5). Every pair played once (66), plus each model against a copy of itself (12): <b>78 duels, 156 verdicts</b>. Medium effort.</li>
+        <li><b>Open room:</b> 7 GPT models (GPT-6.1 Sol, GPT-6 Astra/Sol/Luna, GPT-5.6 Sol/Terra/Luna) plus the three newest Claude models. 28 GPT×GPT duels (self-pairs included), 21 GPT×Claude and 3 Claude×Claude: <b>52 duels, 104 verdicts</b>. The lineup listed all 19 models.</li>
+        <li><b>Plumbing:</b> a referee script calls <a href="https://github.com/cochon123/cli2api">cli2api</a>, which wraps the Claude Code and Codex CLIs as a local OpenAI-style API (loopback only, with a token).</li>
+        <li><b>Claude blindfold:</b> a local proxy strips the "You are powered by…" sentence, the model ID, the cutoff, the date, the user's email and the environment block. Claude still sees "You are a Claude agent", so it knows its family but not its version. Tools are disabled.</li>
+        <li><b>GPT blindfold:</b> Codex refuses plain-HTTP proxies, so it gets a custom model catalogue instead. That catalogue replaces the "You are Codex, based on GPT-…" prompt with the arena rules and removes every tool that lists model names. GPT still knows it is "ChatGPT". The user's global Codex notes file (infrastructure notes, nothing about model identity) was still included.</li>
+        <li><b>Leak check:</b> asked cold, Claude got itself right 0 of 30 times and GPT 3 of 14 times (GPT-6 Sol twice, GPT-6 Astra once). The GPT blindfold may be slightly leakier, or GPT-6 Sol just guesses the most common GPT-6 name.</li>
+        <li><b>Chance levels:</b> exact name 1/12 (8.3%) in room 1 and 1/19 (5.3%) in the open room. Family 1/3 in room 1 and 1/7 in the open room. Scoring uses the model's top-1 suspect; "top 3" counts a hit anywhere in its three suspects.</li>
+        <li><b>Not tested:</b> Fable 5.1 (needs API credits), Opus 4.0/4.1 (aliased to 5.5 on this account), Haiku 5 (unavailable).</li>
+        <li><b>Sample size:</b> 13 verdicts per model per room is small. Per-model numbers are anecdotes, not rankings. Only 3 Claude×Claude duels ran in the open room (6 verdicts).</li>
+        <li><b>Cost:</b> about <span id="tok"></span> tokens per duel on average. Most of that is output, because every volley resends the conversation so far.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>Made by Opus 5.5.<span>The Mirror Room · October 2026</span></footer>
+
+<script>
+const D = /*DATA*/null;
+const C = {opus:'#C8553D', sonnet:'#3F5FA8', haiku:'#1F8A6A', anth:'#C8553D', oai:'#3F5FA8', ink:'#1F1B16', muted:'#6E655A', line:'#DCD1BE', card:'#FFFDF8', gold:'#D9A13B'};
+const M = Object.fromEntries(D.models.map(m => [m.id, m]));
+const nm = id => M[id] ? M[id].name : (id || '—');
+const famCol = f => ({Opus:C.opus, Sonnet:C.sonnet, Haiku:C.haiku}[f] || C.oai);
+const pc = v => v == null ? '—' : (Math.round(v) + '%');
+const $ = s => document.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function svg(w, h, host) { const s = el('svg', {viewBox:`0 0 ${w} ${h}`, width:'100%', role:'img'}); host.appendChild(s); return s; }
+const tip = $('#tip');
+function hover(node, html) {
+  node.classList.add('hit');
+  node.addEventListener('mousemove', e => { tip.innerHTML = html; tip.style.opacity = 1; const x = Math.min(e.clientX + 14, innerWidth - 320); tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px'; });
+  node.addEventListener('mouseleave', () => tip.style.opacity = 0);
+}
+function legend(host, items) { host.innerHTML = items.map(([c, t, tick]) => `<span><i class="${tick ? 'tick' : ''}" style="${tick ? '' : 'background:' + c}"></i>${t}</span>`).join(''); }
+function table(host, head, rows) { host.innerHTML = `<table><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map(r => `<tr>${r.map((c, i) => `<td class="${i && /^[\d—]/.test(String(c)) ? 'n' : ''}">${c}</td>`).join('')}</tr>`).join('')}</table>`; }
+function bar(g, x, y, w, h, fill) { const r = Math.min(4, w / 2, h / 2); return el('path', {d:`M${x},${y}h${Math.max(0, w - r)}a${r},${r} 0 0 1 ${r},${r}v${h - 2 * r}a${r},${r} 0 0 1 -${r},${r}h-${Math.max(0, w - r)}z`, fill}, g); }
+
+const R1 = D.room1, RO = D.open;
+// ---------- tiles ----------
+const selfHits = R1.selfPairs.filter(s => s.exact).length;
+const tiles = [
+  [pc(R1.exact), `of Claude-vs-Claude verdicts named the partner exactly`, `chance would give ${pc(R1.chance.exact)} · 156 verdicts`],
+  [`${selfHits}<small>/ 24</small>`, `verdicts recognised a copy of themselves by name`, `12 mirror duels, 2 verdicts each`],
+  [pc(RO.twoByTwo['OpenAI->OpenAI'].saidAnthropic), `of the time, a GPT talking to another GPT decided it was a Claude`, `${RO.twoByTwo['OpenAI->OpenAI'].n} GPT→GPT verdicts`],
+  [pc(RO.twoByTwo['Anthropic->OpenAI'].maker), `of the time, Claude spotted a GPT partner as GPT`, `21 Claude→GPT verdicts`],
+];
+$('#tiles').innerHTML = tiles.map(([n, l, c]) => `<div class="tile"><div class="num">${n}</div><div class="lbl">${l}</div><div class="ctx">${c}</div></div>`).join('');
+
+// ---------- finding 1: accuracy vs chance ----------
+$('#f1exact').textContent = pc(R1.exact); $('#f1chance').textContent = pc(R1.chance.exact);
+$('#f1fam').textContent = pc(R1.family); $('#f1famc').textContent = pc(R1.chance.family);
+(function () {
+  const rows = [['Exact model', R1.exact, R1.chance.exact, RO.exact, RO.chance.exact], ['In top 3', R1.top3, R1.chance.top3, RO.top3, RO.chance.top3], ['Right family', R1.family, R1.chance.family, RO.family, RO.chance.family]];
+  legend($('#lg1'), [[C.opus, 'Room 1 · Claude only'], [C.sonnet, 'Open room · Claude + GPT'], [C.ink, 'Random-guess level', 1]]);
+  const W = 520, L = 110, H = rows.length * 76 + 30, s = svg(W, H, $('#c1')), x = v => L + (v / 60) * (W - L - 40);
+  const ax = el('g', {class:'axis'}, s);
+  [0, 20, 40, 60].forEach(v => { el('line', {x1:x(v), x2:x(v), y1:0, y2:H - 22, stroke:C.line, 'stroke-dasharray': v ? '2 4' : ''}, ax); el('text', {x:x(v), y:H - 6, 'text-anchor':'middle'}, ax).textContent = v + '%'; });
+  rows.forEach(([lab, a, ca, b, cb], i) => {
+    const y = 12 + i * 76;
+    const t = el('text', {x:0, y:y + 26, 'font-size':14, 'font-weight':600}, s); t.textContent = lab;
+    [[a, ca, C.opus, 'Room 1', 0], [b, cb, C.sonnet, 'Open room', 26]].forEach(([v, c, col, rn, dy]) => {
+      const g = el('g', {}, s);
+      bar(g, x(0), y + dy, x(v) - x(0), 20, col);
+      el('line', {x1:x(c), x2:x(c), y1:y + dy - 4, y2:y + dy + 24, stroke:C.ink, 'stroke-width':2}, g);
+      const tv = el('text', {x:x(v) + 6, y:y + dy + 15, 'font-size':12, fill:C.muted}, g); tv.textContent = pc(v);
+      el('rect', {x:x(0), y:y + dy - 3, width:W - L, height:26, fill:'transparent'}, g);
+      hover(g, `<b>${lab} · ${rn}</b><br>${pc(v)} correct<br>chance: ${pc(c)}`);
+    });
+  });
+  table($('#t1'), ['Measure', 'Room 1', 'chance', 'Open room', 'chance'], rows.map(r => [r[0], pc(r[1]), pc(r[2]), pc(r[3]), pc(r[4])]));
+})();
+
+// ---------- finding 2: most-guessed ----------
+(function () {
+  const top = R1.guessed.slice(0, 8), truth = 13;
+  $('#f2top').textContent = top[0][1] + ' times';
+  legend($('#lg2'), [[C.opus, 'Opus'], [C.sonnet, 'Sonnet'], [C.haiku, 'Haiku'], [C.ink, 'Fair share (13 each)', 1]]);
+  const W = 520, L = 100, H = top.length * 34 + 30, s = svg(W, H, $('#c2')), max = top[0][1], x = v => L + (v / 50) * (W - L - 40);
+  const ax = el('g', {class:'axis'}, s);
+  [0, 10, 20, 30, 40, 50].forEach(v => { el('line', {x1:x(v), x2:x(v), y1:0, y2:H - 22, stroke:C.line, 'stroke-dasharray': v ? '2 4' : ''}, ax); el('text', {x:x(v), y:H - 6, 'text-anchor':'middle'}, ax).textContent = v; });
+  top.forEach(([id, n], i) => {
+    const y = 6 + i * 34, g = el('g', {}, s);
+    el('text', {x:0, y:y + 15, 'font-size':13}, g).textContent = nm(id);
+    bar(g, x(0), y + 2, x(n) - x(0), 18, famCol(M[id].family));
+    el('text', {x:x(n) + 6, y:y + 16, 'font-size':12, fill:C.muted}, g).textContent = n;
+    el('rect', {x:0, y, width:W, height:30, fill:'transparent'}, g);
+    hover(g, `<b>${nm(id)}</b><br>top guess in ${n} of 156 verdicts<br>actually present: in 13 verdicts (${R1.target[id].exact}% of those named right)`);
+  });
+  el('line', {x1:x(truth), x2:x(truth), y1:0, y2:H - 22, stroke:C.ink, 'stroke-width':2}, s);
+  table($('#t2'), ['Guessed model', 'times', 'fair share'], top.map(([id, n]) => [nm(id), n, truth]));
+})();
+
+// ---------- finding 3: mirror ----------
+(function () {
+  $('#f3n').textContent = selfHits; $('#f3self').textContent = R1.mirrorSelf.mean + '%'; $('#f3cross').textContent = R1.mirrorCross.mean + '%';
+  const self = R1.guesses.filter(g => g.self && g.sameAsMe != null), cross = R1.guesses.filter(g => !g.self && g.sameAsMe != null);
+  legend($('#lg3'), [[C.opus, 'Partner was a copy of itself'], [C.sonnet, 'Partner was a different model'], [C.ink, 'Average', 1]]);
+  const W = 520, H = 200, L = 20, s = svg(W, H, $('#c3')), x = v => L + (v / 60) * (W - 2 * L);
+  const ax = el('g', {class:'axis'}, s);
+  [0, 10, 20, 30, 40, 50, 60].forEach(v => { el('line', {x1:x(v), x2:x(v), y1:10, y2:H - 26, stroke:C.line, 'stroke-dasharray': v ? '2 4' : ''}, ax); el('text', {x:x(v), y:H - 8, 'text-anchor':'middle'}, ax).textContent = v + '%'; });
+  el('text', {x:x(30), y:H - 8 + 0, 'text-anchor':'middle', class:'axis'});
+  const jit = i => ((i * 37) % 17) / 17 * 34 - 17;
+  [[cross, C.sonnet, 120, 'different model'], [self, C.opus, 50, 'copy of itself']].forEach(([arr, col, cy, lab]) => {
+    arr.forEach((g, i) => { const c = el('circle', {cx:x(Math.min(g.sameAsMe, 60)), cy:cy + jit(i), r:5, fill:col, 'fill-opacity':.75, stroke:C.card, 'stroke-width':2}, s); hover(c, `<b>${nm(g.det)}</b> facing ${nm(g.tgt)}<br>"is this me?" ${g.sameAsMe}%<br>top guess: ${nm(g.guess)}`); });
+    const m = arr.reduce((a, g) => a + g.sameAsMe, 0) / arr.length;
+    el('line', {x1:x(m), x2:x(m), y1:cy - 26, y2:cy + 26, stroke:C.ink, 'stroke-width':2.5}, s);
+    el('text', {x:x(m) + 6, y:cy - 30, 'font-size':12, 'font-weight':600}, s).textContent = `avg ${Math.round(m)}%`;
+  });
+  table($('#t3'), ['Model (vs. its copy)', 'top guess', '"is this me?"'], R1.selfPairs.map(s => [nm(s.det), `${nm(s.guess)} ${s.exact ? '✓' : ''}`, s.sameAsMe + '%']));
+})();
+
+// ---------- finding 4: makers ----------
+(function () {
+  const T = RO.twoByTwo;
+  $('#f4ao').textContent = pc(T['Anthropic->OpenAI'].maker); $('#f4oa').textContent = pc(T['OpenAI->Anthropic'].saidAnthropic); $('#f4oo').textContent = pc(T['OpenAI->OpenAI'].saidAnthropic);
+  legend($('#lg4'), [[C.anth, 'Said "Anthropic"'], [C.oai, 'Said "OpenAI"']]);
+  const rows = [['Claude → Claude', T['Anthropic->Anthropic'], 'Anthropic'], ['Claude → GPT', T['Anthropic->OpenAI'], 'OpenAI'], ['GPT → Claude', T['OpenAI->Anthropic'], 'Anthropic'], ['GPT → GPT', T['OpenAI->OpenAI'], 'OpenAI']];
+  const W = 520, L = 130, H = rows.length * 52 + 28, s = svg(W, H, $('#c4')), x = v => L + (v / 100) * (W - L - 10);
+  const ax = el('g', {class:'axis'}, s);
+  [0, 50, 100].forEach(v => el('text', {x:x(v), y:H - 6, 'text-anchor': v === 100 ? 'end' : 'middle'}, ax).textContent = v + '%');
+  rows.forEach(([lab, t, truth], i) => {
+    const y = 6 + i * 52, a = t.saidAnthropic, g = el('g', {}, s);
+    el('text', {x:0, y:y + 17, 'font-size':13, 'font-weight':600}, g).textContent = lab;
+    el('text', {x:0, y:y + 33, 'font-size':11, fill:C.muted}, g).textContent = `truth: ${truth} · n=${t.n}`;
+    bar(g, x(0), y + 4, Math.max(0, x(a) - x(0) - 1), 26, C.anth);
+    el('rect', {x:x(a) + 1, y:y + 4, width:Math.max(0, x(100) - x(a) - 1), height:26, rx:4, fill:C.oai}, g);
+    if (a > 12) el('text', {x:x(0) + 8, y:y + 22, 'font-size':12, fill:'#fff', 'font-weight':600}, g).textContent = pc(a);
+    if (a < 88) el('text', {x:x(100) - 8, y:y + 22, 'font-size':12, fill:'#fff', 'font-weight':600, 'text-anchor':'end'}, g).textContent = pc(100 - a);
+    hover(g, `<b>${lab}</b> (${t.n} verdicts)<br>said Anthropic: ${pc(a)}<br>said OpenAI: ${pc(100 - a)}<br>maker correct: ${pc(t.maker)}`);
+  });
+  table($('#t4'), ['Detective → partner', 'n', 'said Anthropic', 'maker correct'], rows.map(([l, t]) => [l, t.n, pc(t.saidAnthropic), pc(t.maker)]));
+})();
+
+
+// ---------- leaderboard ----------
+(function () {
+  const LB = {exact:'#9E3B26', fam:'#D9826A', maker:'#EFC3B3'};
+  let view = 'detective', room = 'room1';
+  function draw() {
+    const R = D[room], open = room === 'open', T = R[view];
+    const rows = Object.entries(T).filter(([, v]) => v.n).map(([id, v]) => {
+      const e = 3 * v.hits / v.n, f = v.famOnly / v.n, m = open ? v.makerOnly / v.n : 0;
+      return {id, v, e, f, m, score: e + f + m};
+    }).sort((a, b) => b.score - a.score || b.v.hits - a.v.hits);
+    legend($('#lglb'), [[LB.exact, 'Exact name (3 pts)'], [LB.fam, 'Right family (1 pt)'], ...(open ? [[LB.maker, 'Right company only (1 pt)']] : []), [C.ink, `Random guesser (${R.chanceScore.toFixed(2)})`, 1]]);
+    const host = $('#lbChart'); host.innerHTML = '';
+    const W = 960, L = 190, RW = 230, rh = 38, H = rows.length * rh + 34, s = svg(W, H, host), max = 1.2;
+    const x = v => L + (v / max) * (W - L - RW);
+    const ax = el('g', {class:'axis'}, s);
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => { el('line', {x1:x(v), x2:x(v), y1:0, y2:H - 24, stroke:C.line, 'stroke-dasharray': v ? '2 4' : ''}, ax); el('text', {x:x(v), y:H - 6, 'text-anchor':'middle'}, ax).textContent = v.toFixed(2); });
+    const medal = ['🥇', '🥈', '🥉'];
+    rows.forEach((r, i) => {
+      const y = 4 + i * rh, g = el('g', {}, s), col = M[r.id].maker === 'OpenAI' ? C.oai : famCol(M[r.id].family);
+      el('text', {x:0, y:y + 21, 'font-size':15}, g).textContent = medal[i] || '';
+      el('rect', {x:30, y:y + 10, width:10, height:10, rx:3, fill:col}, g);
+      el('text', {x:48, y:y + 20, 'font-size':14, 'font-weight': i < 3 ? 700 : 500}, g).textContent = nm(r.id);
+      let x0 = x(0);
+      [[r.e, LB.exact], [r.f, LB.fam], [r.m, LB.maker]].forEach(([v, c], k, arr) => {
+        if (!v) return; const w = x(v) - x(0);
+        const last = arr.slice(k + 1).every(([vv]) => !vv);
+        if (last) bar(g, x0, y + 6, Math.max(w - 2, 1), 22, c); else el('rect', {x:x0, y:y + 6, width:Math.max(w - 2, 1), height:22, fill:c}, g);
+        x0 += w;
+      });
+      el('text', {x:x0 + 8, y:y + 22, 'font-size':14, 'font-weight':700}, g).textContent = r.score.toFixed(2);
+      el('text', {x:W - RW + 60, y:y + 22, 'font-size':12, fill:C.muted}, g).textContent = `${r.v.hits} exact · ${r.v.famOnly} family${open ? ` · ${r.v.makerOnly} company` : ''} / ${r.v.n}`;
+      el('rect', {x:0, y, width:W, height:rh, fill:'transparent'}, g);
+      hover(g, `<b>${medal[i] || '#' + (i + 1)} ${nm(r.id)}</b> · ${r.score.toFixed(2)} pts per verdict<br>${view === 'detective' ? 'as detective' : 'as the partner being guessed'}, ${r.v.n} verdicts<br>exact name: ${r.v.hits} · right family: ${r.v.famOnly}${open ? ` · right company only: ${r.v.makerOnly}` : ''}`);
+    });
+    el('line', {x1:x(R.chanceScore), x2:x(R.chanceScore), y1:0, y2:H - 24, stroke:C.ink, 'stroke-width':2, 'stroke-dasharray':'5 4'}, s);
+    table($('#tlb'), ['#', 'Model', 'points / verdict', 'exact', 'family', ...(open ? ['company only'] : []), 'verdicts'], rows.map((r, i) => [String(i + 1), nm(r.id), r.score.toFixed(2), r.v.hits, r.v.famOnly, ...(open ? [r.v.makerOnly] : []), r.v.n]));
+  }
+  tabs('#lbView', v => { view = v; draw(); });
+  tabs('#lbRoom', r => { room = r; draw(); });
+})();
+
+// ---------- confusion matrix ----------
+function confusion(rk) {
+  const R = D[rk], ids = rk === 'room1' ? D.models.filter(m => m.maker === 'Anthropic').map(m => m.id) : D.models.filter(m => m.maker === 'OpenAI' || /5-5$/.test(m.id)).map(m => m.id);
+  const cols = rk === 'room1' ? ids : D.models.map(m => m.id);
+  const host = $('#cm'); host.innerHTML = '';
+  const cs = rk === 'room1' ? 38 : 30, L = 110, T = 96, W = L + cols.length * cs + 10, H = T + ids.length * cs + 10;
+  const s = svg(W, H, host); s.setAttribute('width', W); s.style.maxWidth = 'none';
+  let max = 1; ids.forEach(t => cols.forEach(g => max = Math.max(max, R.conf[t]?.[g] || 0)));
+  const shade = v => { if (!v) return '#F6EFE4'; const k = v / max; const l = 0.93 - k * 0.55; return `oklch(${l} ${0.03 + k * 0.12} 40)`; };
+  legend($('#lgcm'), [['oklch(0.86 0.05 40)', 'few votes'], ['oklch(0.6 0.13 40)', 'some votes'], ['oklch(0.38 0.15 40)', `most (${max})`]]);
+  cols.forEach((g, j) => { const t = el('text', {x:L + j * cs + cs / 2, y:T - 8, 'font-size':11, fill:C.muted, transform:`rotate(-55 ${L + j * cs + cs / 2} ${T - 8})`}, s); t.textContent = nm(g); });
+  ids.forEach((t, i) => {
+    el('text', {x:L - 8, y:T + i * cs + cs / 2 + 4, 'font-size':12, 'text-anchor':'end'}, s).textContent = nm(t);
+    cols.forEach((g, j) => {
+      const v = R.conf[t]?.[g] || 0, r = el('rect', {x:L + j * cs + 1, y:T + i * cs + 1, width:cs - 2, height:cs - 2, rx:4, fill:shade(v), stroke: t === g ? C.ink : 'none', 'stroke-width':1.5}, s);
+      if (v) { const tx = el('text', {x:L + j * cs + cs / 2, y:T + i * cs + cs / 2 + 4, 'font-size':11, 'text-anchor':'middle', fill: v / max > .5 ? '#fff' : C.ink, 'pointer-events':'none'}, s); tx.textContent = v; }
+      hover(r, `real partner <b>${nm(t)}</b><br>guessed as <b>${nm(g)}</b>: ${v} vote${v === 1 ? '' : 's'}${t === g ? '<br>(correct)' : ''}`);
+    });
+  });
+  el('text', {x:L, y:14, 'font-size':11, fill:C.muted}, s).textContent = 'top guess →';
+}
+// ---------- detective/suspect table ----------
+function ds(rk) {
+  const R = D[rk], ids = Object.keys(R.detective).filter(id => R.detective[id].n || R.target[id].n);
+  const cell = o => o.n ? `${pc(o.exact)} <span class="muted">/ ${pc(o.family)}</span>` : '—';
+  table($('#ds'), ['Model', 'as detective', 'as suspect', 'verdicts'], ids.map(id => [`<span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${M[id].maker === 'OpenAI' ? C.oai : famCol(M[id].family)};margin-right:8px"></span>${nm(id)}`, cell(R.detective[id]), cell(R.target[id]), R.detective[id].n]));
+}
+function tabs(sel, fn) { const b = [...document.querySelectorAll(sel + ' button')]; b.forEach(x => x.onclick = () => { b.forEach(y => y.setAttribute('aria-pressed', y === x)); fn(x.dataset.r); }); fn(b[0].dataset.r); }
+tabs('#cmTabs', confusion); tabs('#dsTabs', ds);
+
+// ---------- calibration ----------
+(function () {
+  const all = [...R1.guesses, ...RO.guesses].filter(g => g.p != null);
+  const bins = [[0, 25], [25, 35], [35, 45], [45, 101]].map(([lo, hi]) => { const s = all.filter(g => g.p >= lo && g.p < hi); return {lab: hi > 100 ? `${lo}%+` : `${lo}–${hi}%`, mid: hi > 100 ? 55 : (lo + hi) / 2, n: s.length, hit: s.length ? 100 * s.filter(g => g.exact).length / s.length : 0}; });
+  legend($('#lgcal'), [[C.sonnet, 'Actual hit rate'], [C.ink, 'Perfect calibration', 1]]);
+  const W = 460, H = 240, L = 40, B = 40, s = svg(W, H, $('#cal')), x = i => L + 20 + i * ((W - L - 40) / bins.length), bw = (W - L - 40) / bins.length - 18, y = v => H - B - (v / 60) * (H - B - 10);
+  const ax = el('g', {class:'axis'}, s);
+  [0, 20, 40, 60].forEach(v => { el('line', {x1:L, x2:W, y1:y(v), y2:y(v), stroke:C.line, 'stroke-dasharray': v ? '2 4' : ''}, ax); el('text', {x:L - 6, y:y(v) + 4, 'text-anchor':'end'}, ax).textContent = v + '%'; });
+  bins.forEach((b, i) => {
+    const g = el('g', {}, s);
+    el('path', {d:`M${x(i)},${y(0)}V${y(b.hit) + 4}a4,4 0 0 1 4,-4h${bw - 8}a4,4 0 0 1 4,4V${y(0)}z`, fill:C.sonnet}, g);
+    el('line', {x1:x(i) - 4, x2:x(i) + bw + 4, y1:y(b.mid), y2:y(b.mid), stroke:C.ink, 'stroke-width':2}, g);
+    el('text', {x:x(i) + bw / 2, y:H - B + 16, 'text-anchor':'middle', 'font-size':12, fill:C.muted}, g).textContent = b.lab;
+    el('text', {x:x(i) + bw / 2, y:H - B + 30, 'text-anchor':'middle', 'font-size':10, fill:C.muted}, g).textContent = `n=${b.n}`;
+    el('rect', {x:x(i), y:0, width:bw, height:H - B, fill:'transparent'}, g);
+    hover(g, `<b>Stated confidence ${b.lab}</b><br>${b.n} verdicts<br>actually right: ${b.hit.toFixed(1)}%`);
+  });
+  table($('#tcal'), ['Stated confidence', 'verdicts', 'actually right'], bins.map(b => [b.lab, b.n, b.hit.toFixed(1) + '%']));
+})();
+
+// ---------- baseline ----------
+(function () {
+  const all = [...R1.baseline.map(b => ({...b, room:'Room 1'})), ...RO.baseline.filter(b => b.model.startsWith('gpt')).map(b => ({...b, room:'Open'}))];
+  const cl = all.filter(b => !b.model.startsWith('gpt')), gp = all.filter(b => b.model.startsWith('gpt'));
+  const cl2 = [...cl, ...RO.baseline.filter(b => !b.model.startsWith('gpt'))];
+  $('#bc').textContent = `${cl2.filter(b => b.right).length} / ${cl2.length}`; $('#bg').textContent = `${gp.filter(b => b.right).length} / ${gp.length}`;
+  table($('#base'), ['Model', 'thinks it is', 'conf.'], all.map(b => [nm(b.model), `<span class="${b.right ? 'ok' : ''}">${nm(b.guess)}${b.right ? ' ✓' : ''}</span>`, b.p != null ? b.p + '%' : '—']));
+})();
+
+// ---------- transcripts ----------
+(function () {
+  const list = [...R1.transcripts.map(t => ({...t, room:'Room 1'})), ...RO.transcripts.map(t => ({...t, room:'Open room'}))];
+  const sel = $('#duelSel');
+  const mark = (v, truth) => !v ? '' : v.guess === truth ? '<span class="ok">✓ exact</span>' : (M[v.guess] && M[v.guess].family === M[truth].family) ? '<span class="near">~ family</span>' : '<span class="no">✗</span>';
+  sel.innerHTML = list.map((t, i) => `<option value="${i}">${t.room}: ${nm(t.a)} vs ${nm(t.b)}${t.a === t.b ? ' (mirror)' : ''}</option>`).join('');
+  const esc = s => (s || '').replace(/[&<>]/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;'}[c]));
+  const verdict = (v, me, them) => !v ? '<div class="env">no verdict</div>' : `<div class="env"><div class="who">${nm(me)}'s secret ballot</div>Top suspects: ${(v.top3 || []).map(t => `${esc(t.raw)} (${t.p}%)`).join(', ')}\nVerdict: ${mark(v, them)}${v.maker ? ` · maker: ${v.maker}` : ''}\n"Is this me?" ${v.same}% · thinks it is ${nm(v.self)}\n<i>${esc(v.ev)}</i></div>`;
+  function show(i) {
+    const t = list[i];
+    $('#duelMeta').textContent = `${t.room} · A = ${nm(t.a)}, B = ${nm(t.b)}`;
+    $('#duel').innerHTML = t.log.map(l => `<div class="vtag">VOLLEY ${l.v}</div><div class="volley"><div class="env"><div class="who">A · ${nm(t.a)}</div>${esc(l.a)}</div><div class="env"><div class="who">B · ${nm(t.b)}</div>${esc(l.b)}</div></div>`).join('') + `<div class="vtag">VERDICTS</div><div class="verd">${verdict(t.va, t.a, t.b)}${verdict(t.vb, t.b, t.a)}</div>`;
+  }
+  sel.onchange = () => show(+sel.value);
+  const fav = list.findIndex(t => t.a === 'claude-sonnet-4-6' && t.b === 'claude-sonnet-4-6');
+  sel.value = fav >= 0 ? fav : 0; show(+sel.value);
+})();
+$('#tok').textContent = Math.round(((R1.tokens.perDuel * R1.duels) + (RO.tokens.perDuel * RO.duels)) / (R1.duels + RO.duels) / 1000) + 'k';
+</script>
+</body>
+</html>

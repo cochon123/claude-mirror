@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Wrapper that cli2api spawns instead of `claude`.
+# Strips everything that could tell a model who it is: Claude Code's default
+# system prompt (which names the model), CLAUDE.md, memory, plugins, hooks.
+# The arena rules arrive in the prompt itself (built by arena.mjs).
+REAL="${CLAUDE_ARENA_REAL_BIN:-$(command -v claude)}"
+EMPTY="${CLAUDE_ARENA_EMPTY_DIR:-/tmp/claude-arena-empty}"
+mkdir -p "$EMPTY" && cd "$EMPTY" || exit 1
+[ "$1" = "--version" ] && exec "$REAL" --version
+# cli2api runs Claude in plan mode, which injects a "write a plan file" reminder that derails the
+# game. Tools are already disabled (--tools ""), so the default permission mode is just as safe.
+args=()
+while [ $# -gt 0 ]; do
+  if [ "$1" = "--permission-mode" ]; then args+=("--permission-mode" "default"); shift 2; continue; fi
+  args+=("$1"); shift
+done
+export ANTHROPIC_BASE_URL="${CLAUDE_ARENA_PROXY:-http://127.0.0.1:8787}"
+exec "$REAL" "${args[@]}" \
+  --system-prompt "You are an AI model taking part in a research game. Follow the instructions in the user message exactly." \
+  --safe-mode \
+  --no-session-persistence \
+  ${CLAUDE_ARENA_EFFORT:+--effort "$CLAUDE_ARENA_EFFORT"}

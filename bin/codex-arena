@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Codex twin of claude-arena: cli2api runs this instead of `codex`. Same blindfold idea:
+# neutral instructions instead of the Codex base prompt (which names the model), no user config,
+# AGENTS.md, rules, memories or session files, an empty cwd, verified by a one-off trace dump (bin/codex-trace.sh).
+REAL="${CODEX_ARENA_REAL_BIN:-$(command -v codex)}"
+HERE="$(cd "$(dirname "$0")" && pwd)"
+EMPTY="${CLAUDE_ARENA_EMPTY_DIR:-/tmp/claude-arena-empty}"
+mkdir -p "$EMPTY" && cd "$EMPTY" || exit 1
+[ "$1" = "exec" ] || exec "$REAL" "$@"
+shift
+args=()
+while [ $# -gt 0 ]; do
+  # read-only sandbox is irrelevant without tools; keep whatever cli2api asked for
+  case "$1" in
+    -c) # cli2api's effort override wins over ours only if the arena didn't pin one
+        if [[ "$2" == model_reasoning_effort=* && -n "$CODEX_ARENA_EFFORT" ]]; then shift 2; continue; fi
+        args+=("$1" "$2"); shift 2 ;;
+    --skip-git-repo-check) shift ;; # we always add it
+    *) args+=("$1"); shift ;;
+  esac
+done
+prompt="${args[-1]}"; unset 'args[-1]'
+CATALOG="$EMPTY/../codex-arena-catalog.json"
+[ -s "$CATALOG" ] || node "$HERE/codex-catalog.mjs" "$CATALOG" || exit 1
+exec "$REAL" exec "${args[@]}" \
+  $([ -z "$CODEX_ARENA_KEEP" ] && echo --ephemeral) --ignore-user-config --ignore-rules --skip-git-repo-check \
+  -C "$EMPTY" \
+  -c "model_instructions_file=\"$HERE/arena-instructions.md\"" \
+  -c "model_catalog_json=\"$CATALOG\"" \
+  -c "project_doc_max_bytes=0" \
+  -c include_environment_context=false -c include_permissions_instructions=false \
+  -c include_collaboration_mode_instructions=false -c include_apps_instructions=false \
+  -c skills.include_instructions=false \
+  -c 'web_search="disabled"' \
+  ${CODEX_ARENA_EFFORT:+-c "model_reasoning_effort=\"$CODEX_ARENA_EFFORT\""} \
+  --disable enable_request_compression --disable shell_tool --disable unified_exec \
+  --disable multi_agent --disable multi_agent_v2 --disable plugins --disable apps --disable image_generation \
+  --disable view_image --disable skill_search --disable tool_suggest --disable goals --disable hooks \
+  --disable code_mode_host --disable code_mode --disable browser_use --disable computer_use --disable sleep_tool --disable memories \
+  -- "$prompt"
